@@ -7933,6 +7933,21 @@ async function getSourceMap(url, fileLoader) {
   if (!content) {
     return;
   }
+
+  if (url.startsWith("https://www.notion.so/")) {
+    const sourceMapUrl = url
+      .replace(
+        "https://www.notion.so/",
+        "https://sourcemaps.admin-dev.notion.so/"
+      )
+      .replace(/\.js$/, ".js.map");
+    let mapContent = "";
+    try {
+      mapContent = await urlLoader(sourceMapUrl);
+    } catch (e) {}
+    return mapContent || emptyMap;
+  }
+
   return new Promise((resolve, reject) => {
     source_map_resolve.resolve(
       content,
